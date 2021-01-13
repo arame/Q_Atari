@@ -46,7 +46,7 @@ def main():
                 agent.learn()
             observation = new_observation
             n_steps +=1
-        score.append(score)  
+        scores.append(score)  
         steps_array.append(n_steps)
         avg_score = np.mean(scores[-100:])  
         print("episode ", i +  1, "score: ", score, "average score %.1f best score %.1f epsilon %.2f" %(avg_score, best_score, agent.epsilon), " steps ", n_steps)
