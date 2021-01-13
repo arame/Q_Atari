@@ -64,3 +64,22 @@ class DeepQAgent:
         self.q_eval.load_checkpoint()
         self.q_next.load_checkpoint()
 
+    def learn(self):
+        if self.memory.mem_cntr < self.batch_size:
+            return
+
+        self.q_eval.optimiser.zero_grad()
+        self.replace_target_network()
+        states, actions, rewards, new_states, dones = self.sample_memory()
+        indicies =np.arrange(self.batch_size)
+        q_pred = self.q_eval.forward(states)[indicies, actions]
+        q_next = self.q_next.forward(new_states).max(dim=1)[0]
+        q_next[dones] = 0.0
+        q_target = rewards + self.gamma* q_next
+        loss = self.q_eval.loss(q_target, q_pred).to(self.q_eval.device)
+        loss.backwards()
+        self.q_eval.optimiser.step()
+        self.learn_step_counter +=1
+        self.decrement_epsilon()
+
+

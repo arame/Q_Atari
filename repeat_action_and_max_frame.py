@@ -4,7 +4,7 @@ import gym
 class RepeatActionAndMaxFrame(gym.Wrapper):
     def __init__(self, env, repeat, clip_rewards, no_ops, fire_first):
         super(RepeatActionAndMaxFrame, self).__init__(env)
-        self.shape = env.obervation_space.low.shape
+        self.shape = env.observation_space.low.shape
         self.repeat = repeat
         self.frameBuffer = np.zeros_like((2, self.shape))
         self.clip_rewards = clip_rewards
