@@ -8,13 +8,13 @@ class Stackframes(gym.ObservationWrapper):
         self.stackSize = stackSize
         low = env.observation_space.low.repeat(stackSize, axis=0)
         high = env.observation_space.high.repeat(stackSize, axis=0)
-        self.obs_space = gym.spaces.Box(low=low, high=high, dtype=np.float32)
+        self.observation_space = gym.spaces.Box(low=low, high=high, dtype=np.float32)
         self.frameStack = collections.deque(maxlen=stackSize)
 
     def reset(self):
         self.frameStack.clear()
         obs = self.env.reset()
-        for _ in range(len(self.frameStack.maxlen)):
+        for _ in range(self.frameStack.maxlen):
             self.frameStack.append(obs)
         arrObs = np.array(self.frameStack).reshape(self.observation_space.low.shape)
         return arrObs

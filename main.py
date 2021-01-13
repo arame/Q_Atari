@@ -16,11 +16,11 @@ def main():
     lr = 0.0001
     epsilon = 1
     gamma = 0.99
-    input_dims = (env.observation_space.shape)
+    input_dims = env.observation_space.shape
     n_actions = env.action_space.n
     eps_min=0.01
     eps_dec=5e-7
-    replace=1000, 
+    replace=1000
     algo=None
     mem_size = 50000
     batch_size = 32

@@ -4,8 +4,7 @@ from replay_buffer import ReplayBuffer
 from network import DeepQNetwork
 
 class DeepQAgent:
-    def __init__(self, lr, n_actions, input_dims, chkpt_dir, epsilon, gamma, mem_size, batch_size, eps_min=0.01, eps_dec=5e-7,
-                replace=1000, algo=None, env_name=None):
+    def __init__(self, lr, n_actions, input_dims, chkpt_dir, epsilon, gamma, mem_size, batch_size, eps_min=0.01, eps_dec=5e-7, replace=1000, algo=None, env_name=None):
         self.epsilon = epsilon
         self.gamma = gamma
         self.lr = lr
@@ -71,13 +70,13 @@ class DeepQAgent:
         self.q_eval.optimiser.zero_grad()
         self.replace_target_network()
         states, actions, rewards, new_states, dones = self.sample_memory()
-        indicies =np.arrange(self.batch_size)
+        indicies = np.arange(self.batch_size)
         q_pred = self.q_eval.forward(states)[indicies, actions]
         q_next = self.q_next.forward(new_states).max(dim=1)[0]
         q_next[dones] = 0.0
         q_target = rewards + self.gamma* q_next
         loss = self.q_eval.loss(q_target, q_pred).to(self.q_eval.device)
-        loss.backwards()
+        loss.backward()
         self.q_eval.optimiser.step()
         self.learn_step_counter +=1
         self.decrement_epsilon()
